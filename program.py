@@ -193,6 +193,7 @@ def Histori_exc(message):
 
 
     word_file_path = f"ZD History/{task_number}.docx"
+    pdf_file_path = f"ZD History/{task_number}.pdf"
 
     # Проверяем, существует ли файл docx
     if os.path.exists(word_file_path):
@@ -200,13 +201,19 @@ def Histori_exc(message):
         with open(word_file_path, 'rb') as docx:
             bot.send_document(message.chat.id, docx)
     else:
-        # Если файл docx не найден, выводим сообщение об ошибке
-        bot.send_message(message.chat.id, "Файл не найден")
-        # Получаем количество баллов за задание
-    points = ball_dicts.get(task_number, '0')
+        if os.path.exists(pdf_file_path):
+            with open(pdf_file_path, 'rb') as pdf:
+                bot.send_document(message.chat.id, pdf)
+        else:
+            # Если файл docx не найден, выводим сообщение об ошибке
+            bot.send_message(message.chat.id, "")
+            # Получаем количество баллов за задание
+        points = ball_dicts.get(task_number, '0')
 
-    # Отправляем сообщение с количеством баллов
-    bot.send_message(message.chat.id, f"За это задание вы можете набрать {points} баллов. На фото представлен пример этого задания, а в файле данна информация для этого задания")
+
+
+        # Отправляем сообщение с количеством баллов
+        bot.send_message(message.chat.id, f"За это задание вы можете набрать {points} баллов. На фото представлен пример этого задания, а в файле данна информация для этого задания")
 
 
 @bot.message_handler(func=lambda message: message.text == '🎁')
